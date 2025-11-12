@@ -140,7 +140,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const grid = document.querySelector('#product-grid');
         const template = document.querySelector('#product-card-template');
 
-        function createProductCard(product) {
+        let isMobile = window.innerWidth < 496;
+
+        window.addEventListener('resize', () => {
+            isMobile = window.innerWidth < 496;
+        });
+
+        function createProductCard(product, isMobile) {
             const productCard = document.createElement('div');
             productCard.setAttribute('id', 'product-card');
             
@@ -191,7 +197,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         products.forEach((product, index) => {
 
-            createProductCard(product);
+            createProductCard(product, isMobile);
             
         });
 });
