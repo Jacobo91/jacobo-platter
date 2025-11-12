@@ -71,8 +71,12 @@ document.addEventListener("DOMContentLoaded", () => {
             card.querySelector('a').href = 'https://www.google.com';
             featuredImage.src = product['featured-image'];
 
-            featuredImage.addEventListener('Mouseover', () => {
+            featuredImage.addEventListener('mouseover', () => {
                 featuredImage.src = product.images[1];
+            })
+
+            featuredImage.addEventListener('mouseout', () => {
+                featuredImage.src = product['featured-image'];
             })
 
             card.querySelector('#product-title').textContent = product.title;
