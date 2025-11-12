@@ -20,21 +20,37 @@
         #product-grid-wrapper {
             overflow: hidden;
             height: auto;
-            transition: height 1s ease;
+            transition: height 0.6s ease;
         }
+        #product-grid::-webkit-scrollbar {
+            height: 4px;
+            cursor: pointer;
+        }
+        #product-grid:hover::-webkit-scrollbar {
+            height: 6px;
+        }
+        #product-grid::-webkit-scrollbar-thumb {
+            background-color: #231F20;
+            cursor: pointer;
+        }
+
+        #product-grid::-webkit-scrollbar-track {
+            background-color: #DDD6D7;
+        }
+
     </style>
 </head>
 <body>
     <section id="bestsellers__section" class="md:pl-[64px] lg:pl-[128px] mb-[36px] md:mb-[100px]">
-        <h1 class="text-[28px] md:text-[40px] font-bold mb-6 md:mb-[36px] font-source-pro text-center md:text-left mt-[36px] md:mt-[80px]">Best Sellers</h1>
+        <h1 class="text-[28px] md:text-[40px] font-bold mb-6 md:mb-[36px] font-source-pro text-center md:text-left mt-[36px] md:mt-[80px] capitalize">Best Sellers</h1>
             
             <product-grid>
-                <div id="product-grid-wrapper">
+                <div id="product-grid-wrapper" class="relative">
                     <div id="product-grid" class="flex gap-x-[11px] gap-y-[12px] md:gap-y-[0px] md:gap-x-[24px] flex-wrap justify-center md:flex-nowrap md:overflow-x-scroll md:justify-start md:pb-[52px]">
-                        <!-- Template for product cards -->
+                        <!-- Template for product cards plain HTML-->
                         <template id="product-card-template" class="product-grid">
         
-                            <a class="relative inline-block w-[158px] md:w-[353px]">
+                            <a class="relative inline-block w-[158px] md:w-[353px] flex-shrink-0">
                                 <!-- tags -->
                                 <div id="tags-container" class="absolute top-0 z-10 flex justify-between w-full p-[4px] md:p-[8px] font-bebas"></div>
                                 

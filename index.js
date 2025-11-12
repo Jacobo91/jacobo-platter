@@ -135,31 +135,27 @@ const products = [
         }
 ];
 
+
 class ProductGrid extends HTMLElement {
     constructor() {
         super();
+        
+        this.isMobile = window.innerWidth < 496;
+        this.showingAll = false;
+        
+        this._onResize = this._onResize.bind(this);
+        this._onShowMoreClick = this._onShowMoreClick.bind(this);
+    }
+    
+    connectedCallback() {
         this.grid = this.querySelector('#product-grid');
         this.template = this.querySelector('#product-card-template');
         this.showMoreBtn = this.querySelector('#show-more-button');
         this.gridWrapper = this.querySelector('#product-grid-wrapper');
 
-        this.isMobile = window.innerWidth < 496;
-        this.showingAll = false;
-
-        // bind handlers so we can add/remove them
-        this._onResize = this._onResize.bind(this);
-        this._onShowMoreClick = this._onShowMoreClick.bind(this);
-    }
-
-    connectedCallback() {
         this.renderProducts();
 
-        // click handler
-        if (this.showMoreBtn) {
-            this.showMoreBtn.addEventListener("click", this._onShowMoreClick);
-        }
-
-        // resize handler to toggle mobile/desktop behavior
+        this.showMoreBtn?.addEventListener("click", this._onShowMoreClick);
         window.addEventListener("resize", this._onResize);
     }
 
@@ -178,7 +174,6 @@ class ProductGrid extends HTMLElement {
         let endHeight;
 
         if (wasShowingAll) {
-            // COLLAPSING (show less)
             const clone = this.gridWrapper.cloneNode(true);
             clone.style.position = "absolute";
             clone.style.visibility = "hidden";
@@ -208,7 +203,6 @@ class ProductGrid extends HTMLElement {
 
             this.smoothScrollTo(this.gridWrapper.offsetTop - 80, 900);
         } else {
-            // EXPANDING (show more)
             this.renderProducts();
 
             requestAnimationFrame(() => {
@@ -229,22 +223,18 @@ class ProductGrid extends HTMLElement {
         const prevIsMobile = this.isMobile;
         this.isMobile = window.innerWidth < 496;
 
-        // if we moved from mobile -> desktop: show everything
         if (prevIsMobile && !this.isMobile) {
             this.showingAll = true;
         }
 
-        // if we moved from desktop -> mobile: collapse and reset
         if (!prevIsMobile && this.isMobile) {
             this.showingAll = false;
         }
 
-        // show/hide the button depending on mobile state
         if (this.showMoreBtn) {
             this.showMoreBtn.style.display = this.isMobile ? "" : "none";
         }
 
-        // re-render to apply changes
         this.renderProducts();
     }
 
@@ -340,3 +330,4 @@ class ProductGrid extends HTMLElement {
 }
 
 customElements.define("product-grid", ProductGrid);
+
