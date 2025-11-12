@@ -9,8 +9,11 @@ document.addEventListener("DOMContentLoaded", () => {
                         'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1470',
                         'https://plus.unsplash.com/premium_photo-1679513691474-73102089c117?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1113'
                     ],
-                    'tags': [],
-                    'url': '',
+                    'tags': [
+                        'bestseller',
+                        'save 15%'
+                    ],
+                    'url': 'https://www.google.com',
                 },
                 // {
                 //     'title': 'nike bottle outside vibes forest green',
@@ -67,8 +70,18 @@ document.addEventListener("DOMContentLoaded", () => {
             
             const card = template.content.cloneNode(true);
             const featuredImage = card.querySelector('#featured-image');
+            const tagsContainer = card.querySelector('#tags-container');
+            const tags = product.tags;
 
-            card.querySelector('a').href = 'https://www.google.com';
+            tags.forEach(tag => {
+                const span = document.createElement('span');
+                span.textContent = tag;
+
+                tagsContainer.appendChild(span);
+            });
+
+
+            card.querySelector('a').href = product.url;
             featuredImage.src = product['featured-image'];
 
             featuredImage.addEventListener('mouseover', () => {
