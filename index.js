@@ -140,7 +140,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const grid = document.querySelector('#product-grid');
         const template = document.querySelector('#product-card-template');
 
-        products.forEach(product => {
+        function createProductCard(product) {
             const productCard = document.createElement('div');
             productCard.setAttribute('id', 'product-card');
             
@@ -171,7 +171,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 tagsContainer.appendChild(span);
             });
 
-
             card.querySelector('a').href = product.url;
             featuredImage.src = product['featured-image'];
 
@@ -188,6 +187,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
             productCard.appendChild(card);
             grid.appendChild(productCard);
+        }
+
+        products.forEach((product, index) => {
+
+            createProductCard(product);
+            
         });
-    
-})
+});
