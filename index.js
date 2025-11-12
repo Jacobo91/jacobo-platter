@@ -139,8 +139,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const grid = document.querySelector('#product-grid');
         const template = document.querySelector('#product-card-template');
+        let showMoreBtn = document.querySelector('#show-more-button');
 
         let isMobile = window.innerWidth < 496;
+          let showingAll = false;
 
         window.addEventListener('resize', () => {
             isMobile = window.innerWidth < 496;
@@ -193,18 +195,32 @@ document.addEventListener("DOMContentLoaded", () => {
             card.querySelector('#product-price').textContent = `$${product.price}`;
 
             productCard.appendChild(card);
+            // grid.appendChild(productCard)
             return productCard
         }
 
         function renderProducts() {
             grid.innerHTML = "";
+
             let productsToRender = products;
-            let showMoreBtn = document.querySelector('#show-more-button')
+
+            if (isMobile && !showingAll) {
+                productsToRender = products.slice(0, 4);
+                showMoreBtn.textContent = 'show more';
+            } else if (isMobile && showingAll) {
+                showMoreBtn.textContent = 'show less';
+            }
+
+            productsToRender.forEach(product => {
+                grid.appendChild(createProductCard(product));
+            });
+
         }
-
-        products.forEach((product, index) => {
-
-            createProductCard(product, isMobile);
-            
+        
+        showMoreBtn.addEventListener("click", () => {
+            showingAll = !showingAll;
+            renderProducts();
         });
+        
+        renderProducts();
 });
