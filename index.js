@@ -144,6 +144,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         window.addEventListener('resize', () => {
             isMobile = window.innerWidth < 496;
+            renderProducts();
         });
 
         function createProductCard(product, isMobile) {
@@ -192,7 +193,13 @@ document.addEventListener("DOMContentLoaded", () => {
             card.querySelector('#product-price').textContent = `$${product.price}`;
 
             productCard.appendChild(card);
-            grid.appendChild(productCard);
+            return productCard
+        }
+
+        function renderProducts() {
+            grid.innerHTML = "";
+            let productsToRender = products;
+            let showMoreBtn = document.querySelector('#show-more-button')
         }
 
         products.forEach((product, index) => {
