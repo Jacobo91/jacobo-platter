@@ -140,9 +140,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const grid = document.querySelector('#product-grid');
         const template = document.querySelector('#product-card-template');
         let showMoreBtn = document.querySelector('#show-more-button');
+        const gridWrapper = document.querySelector('#product-grid-wrapper');
 
         let isMobile = window.innerWidth < 496;
-          let showingAll = false;
+        let showingAll = false;
 
         window.addEventListener('resize', () => {
             isMobile = window.innerWidth < 496;
@@ -216,11 +217,80 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
         }
-        
+
         showMoreBtn.addEventListener("click", () => {
+            const wasShowingAll = showingAll;
             showingAll = !showingAll;
-            renderProducts();
+
+            const startHeight = gridWrapper.scrollHeight;
+            let endHeight;
+
+            if (wasShowingAll) {
+                // --- COLLAPSING (show less) ---
+                const clone = gridWrapper.cloneNode(true);
+                clone.style.position = "absolute";
+                clone.style.visibility = "hidden";
+                clone.style.pointerEvents = "none";
+                clone.style.height = "auto";
+                document.body.appendChild(clone);
+
+                const originalGrid = clone.querySelector('#product-grid');
+                originalGrid.innerHTML = "";
+                let collapsedProducts = products.slice(0, 4);
+                collapsedProducts.forEach(product => {
+                    originalGrid.appendChild(createProductCard(product));
+                });
+
+                endHeight = clone.scrollHeight;
+                document.body.removeChild(clone);
+
+                gridWrapper.style.height = `${startHeight}px`;
+                gridWrapper.offsetHeight;
+                gridWrapper.style.transition = "height 0.6s ease";
+                gridWrapper.style.height = `${endHeight}px`;
+
+                gridWrapper.addEventListener("transitionend", function handleCollapse() {
+                    renderProducts();
+                    gridWrapper.style.height = "auto";
+                    gridWrapper.removeEventListener("transitionend", handleCollapse);
+                });
+
+                // 💫 Custom slower scroll
+                smoothScrollTo(gridWrapper.offsetTop - 80, 900); // 900ms duration
+            } else {
+                // --- EXPANDING (show more) ---
+                renderProducts();
+
+                requestAnimationFrame(() => {
+                    endHeight = gridWrapper.scrollHeight;
+                    gridWrapper.style.height = `${startHeight}px`;
+                    gridWrapper.offsetHeight;
+                    gridWrapper.style.transition = "height 0.6s ease";
+                    gridWrapper.style.height = `${endHeight}px`;
+
+                    gridWrapper.addEventListener("transitionend", function handleExpand() {
+                        gridWrapper.style.height = "auto";
+                        gridWrapper.removeEventListener("transitionend", handleExpand);
+                    });
+                });
+            }
         });
-        
+
+        function smoothScrollTo(targetY, duration = 1000) {
+            const startY = window.scrollY;
+            const distance = targetY - startY;
+            const startTime = performance.now();
+
+            function step(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const ease = 1 - Math.pow(1 - progress, 3); // cubic ease-out
+                window.scrollTo(0, startY + distance * ease);
+                if (progress < 1) requestAnimationFrame(step);
+            }
+
+            requestAnimationFrame(step);
+        }
+
         renderProducts();
 });
